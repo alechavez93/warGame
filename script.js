@@ -46,6 +46,9 @@ $(document).ready(function(){
 			t.tankRight = true;
 			t.tankLeft = false;
 		}
+		if (e.keyCode == 32) {
+			t.shoot();
+		};
 	});
 
 	$(document).keyup(function(e){
@@ -150,8 +153,6 @@ function TankShot(x,y,speed,damage,angle){
 		this.x += this.velocityX;
 		this.y -= this.velocityY;
 		this.velocityY -= this.gravity;
-		console.log("current " + this.angle);
-		console.log("diff "	+ (Math.atan(this.velocityY/this.velocityX)));
 		this.deltaAngle = this.angle - (Math.atan(this.velocityY/this.velocityX));
 		this.angle -= this.deltaAngle;
 		// console.log(this.initialAngle);
@@ -192,7 +193,7 @@ function Tank(x,y,color,stance){
 	this.stance = stance;
 
 	//Complex properties
-	this.shooting = true;
+	this.shooting = false;
 	this.tankLeft = false;
 	this.tankRight = false;
 	this.factor = 4;
@@ -275,10 +276,8 @@ function Tank(x,y,color,stance){
 	this.draw = function(){
 		if(this.tankRight)
 			ctx.drawImage(this.image[this.type], this.x, this.y, this.width, this.height);
-		
 		else if(this.tankLeft)
 			ctx.drawImage(this.image[this.type+4], this.x, this.y, this.width, this.height);
-
 		else{
 			if(this.stance == "right"){
 				ctx.drawImage(this.image[this.type], this.x, this.y, this.width, this.height);
@@ -287,7 +286,6 @@ function Tank(x,y,color,stance){
 				ctx.drawImage(this.image[this.type+4], this.x, this.y, this.width, this.height);
 			}
 		}
-
 		//Drawing the shot
 		if(this.shooting){
 			this.tankShot.draw();
@@ -308,7 +306,6 @@ function draw(){
 	clearCanvas();
 	t.draw();
 	// t2.draw();
-	t.tankShot.draw();
 }
 
 function update(){
@@ -332,5 +329,11 @@ function game(){
 	if(gameRunning){
 		update();
 		draw();
+	}
+}
+
+function checkCollission(obj1, obj2) {
+	if (((obj1.x <= (obj2.x + obj2.width)) && ((obj1.x + obj1.width) >= obj2.x)) && ((obj1.y <= (obj2.y + obj2.height)) && ((obj1.y + obj1.height) >= obj2.x))) {
+		return false;
 	}
 }
