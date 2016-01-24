@@ -2,10 +2,45 @@ body{
   background-color: #d7d6d6;
   position: relative;
 }
+.box {
+  width: 100%;
+  background: #3F51B5;
+  border-radius: 20px; 
+  padding: 5% 0;
+}
 h1 {
   text-align: center;
 }
+input {
 
+}
+select {
+  border-radius: 4px;
+  cursor: pointer;
+}
+option {
+  display: block;
+}
+option:first-child {
+  display: block;
+  background-color: #009f3c; 
+}
+option:nth-child(2) {
+  display: block;
+  background-color: #e68497; 
+}
+option:nth-child(3) {
+  display: block;
+  background-color: #2c70b6; 
+}
+option:nth-child(4) {
+  display: block;
+  background-color: #edc87e;
+  border-bottom-left-radius: 4px; 
+}
+.element{
+  display:none;
+}
 .bClick{
   height: 40px;
   width: 113px;
@@ -24,12 +59,8 @@ h1 {
 canvas{
   background-color: white;
   position: absolute;
-	border: blue 2px solid;  
+  border: blue 2px solid;  
   margin-left: -650px;
   margin-top: 50px;
   left: 50%;
-}
-
-.element{
-  display:none;
 }
