@@ -145,8 +145,6 @@ function TankShot(x,y,speed,damage,angle){
 	this.velocityX = Math.cos(angle)*speed;
 	this.velocityY = Math.sin(angle)*speed;
 	this.deltaAngle = 0;
-	this.initialAngle = this.angle;
-	this.firstRotation = true; 
 
 	//Functions
 	this.updateShot = function(){
@@ -155,8 +153,6 @@ function TankShot(x,y,speed,damage,angle){
 		this.velocityY -= this.gravity;
 		this.deltaAngle = this.angle - (Math.atan(this.velocityY/this.velocityX));
 		this.angle -= this.deltaAngle;
-		// console.log(this.initialAngle);
-		// console.log(this.angle);
 	}
 
 	this.updateProportions = function(){
@@ -167,13 +163,7 @@ function TankShot(x,y,speed,damage,angle){
 	this.draw = function(){
 		ctx.save();
 		ctx.translate(this.x+this.width/2,this.y+this.height/2);
-		if (this.firstRotation) {
-			ctx.rotate(this.initialAngle);
-			this.firstRotation = false;
-		}
-		else {
 			ctx.rotate(-1 * this.angle);
-		}
 		ctx.drawImage(this.image[this.type], 0, 0, this.width, this.height);
 		ctx.restore();
 	}
@@ -224,6 +214,11 @@ function Tank(x,y,color,stance){
 		}
 	}
 
+	//Updates the cannon aim
+	this.updateAim = function(){
+
+	}
+
 
 	//Regular shot
 	this.shoot = function(){
@@ -232,12 +227,13 @@ function Tank(x,y,color,stance){
 
 	//Missile shot
 	this.shootMissile = function(){
-
+		//In development
+		//LOL
 	} 
 
 	//Aim weapons
 	this.aim = function(angle){
-
+		this.shotAngle = angle;
 	}
 
 	//Loads the spesific image combo
