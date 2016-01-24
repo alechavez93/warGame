@@ -32,6 +32,7 @@ var gameLoop = setInterval(game, 15);
 
 //Input for the tank 1 (left(A) and right(D))
 $(document).ready(function(){
+	$('canvas').css('display', 'none');
 	//ON CLICK
 	$(document).keydown(function(e){
 		//Left P1
