@@ -1,0 +1,33 @@
+body{
+  background-color: #d7d6d6;
+  position: relative;
+}
+
+.bClick{
+  height: 40px;
+  width: 113px;
+  font-size: 14px;
+  color: black;
+  line-height: 1.866;
+  background: transparent;
+  border-style: solid;
+  border-width: 2px;
+  border-color: black;
+  border-radius: 10px;
+  border: black 2px solid;  
+}
+
+
+canvas{
+  background-color: white;
+  position: absolute;
+	border: blue 2px solid;  
+  margin-left: -650px;
+  margin-top: 50px;
+  left: 50%;
+
+}
+
+.element{
+  display:none;
+}
