@@ -10,24 +10,19 @@ var canvas = document.getElementById("gameCanvas")
 var ctx = canvas.getContext("2d");
 var tankSpeed = 3;
 var tankShotDamage = 25
-var tankShotSpeed = 50;
+var tankShotSpeed = 10;
 
 
 
 //Main function
 //---------------------------------------------------------------------------------------------
 var t = new Tank(20, 350, "green", "right");
-var t2 = new Tank(1100, 350, "blue", "left");
+// var t2 = new Tank(1100, 350, "blue", "left");
 t.loadGraphics();
-t2.loadGraphics();
-
-ctx.drawImage(t.images[t.type], 0, 0, 50, 50);
-
-// t.tankShot.draw();
+// t2.loadGraphics();
 
 
-
-// var gameLoop = setInterval(game, 15);
+var gameLoop = setInterval(game, 15);
 
 
 
@@ -66,30 +61,30 @@ $(document).ready(function(){
 });
 
 //Input for the tank 2 (left(A) and right(D))
-$(document).ready(function(){
-	$(document).keydown(function(e){
-		//Left P2
-		if(e.keyCode == 37){
-			t2.tankRight = false;
-			t2.tankLeft = true;
-		}	
-		//Right P2
-		if(e.keyCode == 39){
-			t2.tankRight = true;
-			t2.tankLeft = false;
-		}
-	});
-	$(document).keyup(function(e){
-		//Left P1
-		if(t2.tankLeft && e.keyCode == 37){	
-			t2.tankLeft = false;
-		}
-		//Right P1
-		if(t2.tankRight && e.keyCode == 39){
-			t2.tankRight = false;
-		}
-	});
-});
+// $(document).ready(function(){
+// 	$(document).keydown(function(e){
+// 		//Left P2
+// 		if(e.keyCode == 37){
+// 			t2.tankRight = false;
+// 			t2.tankLeft = true;
+// 		}	
+// 		//Right P2
+// 		if(e.keyCode == 39){
+// 			t2.tankRight = true;
+// 			t2.tankLeft = false;
+// 		}
+// 	});
+// 	$(document).keyup(function(e){
+// 		//Left P1
+// 		if(t2.tankLeft && e.keyCode == 37){	
+// 			t2.tankLeft = false;
+// 		}
+// 		//Right P1
+// 		if(t2.tankRight && e.keyCode == 39){
+// 			t2.tankRight = false;
+// 		}
+// 	});
+// });
 
 	
 
@@ -132,45 +127,54 @@ function Missile(speed,damage){
 function TankShot(x,y,speed,damage,angle){
 	
 	//Fields
-	this.x = 0;
-	this.y = 0;
-	this.width = 150;
-	this.height = 150;
+	this.x = x;
+	this.y = y;
+	this.width;
+	this.height;
 	this.angle = angle;
 	this.speed = speed;
 	this.damage = damage;
-	this.gravity = -1.1;
+	this.gravity = 0.1;
 
 	//Complex properties
 	this.type = 0;
 	this.image = document.getElementsByClassName("shot");
-	this.velocityX = Math.cos(angle);
-	this.velocityY = Math.sin(angle);
+	this.velocityX = Math.cos(angle)*speed;
+	this.velocityY = Math.sin(angle)*speed;
+	this.deltaAngle = 0;
+	this.initialAngle = this.angle;
+	this.firstRotation = true; 
 
 	//Functions
 	this.updateShot = function(){
 		this.x += this.velocityX;
-		this.y += this.velocityY;
-		this.velocityY += this.gravity;
-		this.angle = Math.atan(this.y/this.x);
+		this.y -= this.velocityY;
+		this.velocityY -= this.gravity;
+		console.log("current " + this.angle);
+		console.log("diff "	+ (Math.atan(this.velocityY/this.velocityX)));
+		this.deltaAngle = this.angle - (Math.atan(this.velocityY/this.velocityX));
+		this.angle -= this.deltaAngle;
+		// console.log(this.initialAngle);
+		// console.log(this.angle);
 	}
 
 	this.updateProportions = function(){
-		this.width =  this.image[this.type].width/8;
-		this.height =  this.image[this.type].height/8;
+		this.width =  this.image[this.type].width/12;
+		this.height =  this.image[this.type].height/12;
 	}
 
 	this.draw = function(){
-		// ctx.rotate(this.angle);
-		console.log(this.x);
-		console.log(this.y);
-		console.log(this.height);
-		console.log(this.width);
-		console.log(this.images[this.type]);
-		ctx.drawImage(this.images[this.type], 0, 0, 50, 50);
-
-
-		//ctx.drawImage(this.images[this.type], this.x, this.y, this.width, this.height);
+		ctx.save();
+		ctx.translate(this.x+this.width/2,this.y+this.height/2);
+		if (this.firstRotation) {
+			ctx.rotate(this.initialAngle);
+			this.firstRotation = false;
+		}
+		else {
+			ctx.rotate(-1 * this.angle);
+		}
+		ctx.drawImage(this.image[this.type], 0, 0, this.width, this.height);
+		ctx.restore();
 	}
 }
 
@@ -193,7 +197,7 @@ function Tank(x,y,color,stance){
 	this.tankRight = false;
 	this.factor = 4;
 	this.HP = 100;
-	this.shotAngle = 0.8;
+	this.shotAngle = 0.78539816339;
 	this.tankShot = new TankShot(this.x, this.y, tankShotSpeed, tankShotDamage, this.shotAngle);
 	this.weaponX;		//int
 	this.weaponY;		//int
@@ -284,11 +288,11 @@ function Tank(x,y,color,stance){
 			}
 		}
 
-		// //Drawing the shot
-		// if(this.shooting){
-		// 	//this.tankShot.draw();
-		// 	this.tankShot.updateShot();
-		// }
+		//Drawing the shot
+		if(this.shooting){
+			this.tankShot.draw();
+			this.tankShot.updateShot();
+		}
 	}
 }
 
@@ -303,7 +307,7 @@ function clearCanvas(){
 function draw(){
 	clearCanvas();
 	t.draw();
-	t2.draw();
+	// t2.draw();
 	t.tankShot.draw();
 }
 
@@ -316,11 +320,11 @@ function update(){
 		t.move(t.x+tankSpeed,t.y);
 
 	//Update tank 2
-	if(t2.tankLeft){
-		t2.move(t2.x-tankSpeed,t2.y);
-	}
-	else if(t2.tankRight)
-		t2.move(t2.x+tankSpeed,t2.y);
+	// if(t2.tankLeft){
+	// 	t2.move(t2.x-tankSpeed,t2.y);
+	// }
+	// else if(t2.tankRight)
+	// 	t2.move(t2.x+tankSpeed,t2.y);
 }
 
 
