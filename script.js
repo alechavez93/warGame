@@ -122,19 +122,32 @@ function Missile(speed,damage){
 
 
 
-function TankShot(x,y,speed,damage){
+function TankShot(x,y,speed,damage,angle){
 	
 	//Fields
 	this.x = x;
 	this.y = y;
+	this.angle = angle;
 	this.speed = speed;
 	this.damage = damage;
-	this.gravity = 1.5;
+	this.gravity = -1.1;
+
+	//Complex properties
+	this.image;
+	this.velocityX = Math.cos(angle);
+	this.velocityY = Math.sin(angle);
 
 	//Functions
 	this.updateShot = function(){
-		this.x += speed;
-		this.y += 0;
+		this.x += this.velocityX;
+		this.y += this.velocityY;
+		this.velocityY += this.gravity;
+		this.angle = Math.atan(this.y/this.x);
+	}
+
+	this.draw = function(){
+		ctx.rotate(angle);
+		ctx.drawImage()
 	}
 }
 
